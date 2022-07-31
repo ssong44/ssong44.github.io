@@ -12,8 +12,8 @@
                 const data = await d3.csv(
                     'https://flunky.github.io/cars2017.csv');
                 
-                var x = d3.scaleLog().domain([10, 150]).range([200, 0]);
-                var y = d3.scaleLog().domain([10, 150]).range([0, 200]);
+                var x = d3.scaleLog().domain([10, 150]).range([0, 200]);
+                var y = d3.scaleLog().domain([10, 150]).range([200, 0]);
                 
                 // Axes
                 d3.select("svg").append("g")
