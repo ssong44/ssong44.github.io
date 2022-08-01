@@ -22,7 +22,7 @@
             async function init() {
                 const data = await d3.csv(
                     'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Data/data_filtered.csv');
-                var x = d3.scaleLinear().domain([0, 150000]).range([0, 600]);
+                var x = d3.scaleLog().domain([500, 160000]).range([0, 600]).base(10);
                 var y = d3.scaleLinear().domain([0, 100]).range([600, 0]);
                 var color = d3.scaleLinear().domain([0, 100]).range(["lightblue","purple"]);
                 
@@ -35,16 +35,23 @@
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+(600+50)+")")
                     .call(d3.axisBottom(x)
-                    .tickValues([30000, 60000, 90000, 120000, 150000])
-                    .tickFormat(d => (d / 1000)));
+                    .tickValues([1000, 2000, 5000, 10000, 50000, 100000])
+                    .tickFormat(d3.format("$,")));
 
                 // Axis Labels
                 d3.select("svg").append("text")
                     .attr("class", "x label")
                     .attr("text-anchor", "end")
-                    .attr("x", 600)
-                    .attr("y", 600 - 6)
-                    .text("income per capita, inflation-adjusted (dollars)");
+                    .attr("x", 400)
+                    .attr("y", 690)
+                    .text("GDP per capita");
+                d3.select("svg").append("text")
+                    .attr("class", "y label")
+                    .attr("text-anchor", "end")
+                    .attr("y", 6)
+                    .attr("dy", ".75em")
+                    .attr("transform", "rotate(-90)")
+                    .text("Life Expectancy (years)");
 
                 // Plot
                 d3.select('svg')
