@@ -25,7 +25,7 @@
                 var x = d3.scaleLog().domain([500, 160000]).range([0, 600]).base(10);
                 var y = d3.scaleLinear().domain([50, 85]).range([600, 0]);
                 var color = d3.scaleLinear().domain([0, 100]).range(["lightblue","purple"]);
-                var pop = d3.scaleLog().domain([100000, 2000000000]).range([2, 30]).base(2);
+                var pop = d3.scaleLog().domain([100000, 2000000000]).range([2, 30]).base(10);
                 var continent = d3.scaleLinear()
                     .domain(["Africa", "North America", "Middle & South America", "Asia", "Europe", "Oceania"])
                     .range(["brown", "green", "orange", "red", "purple", "blue"]);
