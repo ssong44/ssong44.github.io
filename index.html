@@ -13,7 +13,7 @@
                     'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Life%20Expectancy%20Data.csv');
                 var x = d3.scaleLinear().domain([0, 150000]).range([0, 600]);
                 var y = d3.scaleLinear().domain([0, 100]).range([600, 0]);
-                var color = d3.scaleLinear().domain([0, 100]).range(["orange","blue"]);
+                var color = d3.scaleLinear().domain([0, 100]).range(["blue","orange"]);
                 
                 // Axes
                 d3.select("svg").append("g")
