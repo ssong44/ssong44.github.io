@@ -12,7 +12,7 @@
                 const data = await d3.csv(
                     'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Life%20Expectancy%20Data.csv');
                 console.log(data);
-                var x = d3.scaleLinear().domain([0, 100000]).range([0, 200]);
+                var x = d3.scaleLinear().domain([0, 200000]).range([0, 200]);
                 var y = d3.scaleLinear().domain([0, 100]).range([200, 0]);
                 
                 // Axes
