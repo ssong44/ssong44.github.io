@@ -23,14 +23,18 @@
                 const data = await d3.csv(
                     'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Data/data_filtered.csv');
                 var x = d3.scaleLog().domain([500, 160000]).range([0, 600]).base(10);
-                var y = d3.scaleLinear().domain([0, 100]).range([600, 0]);
+                var y = d3.scaleLinear().domain([50, 85]).range([600, 0]);
                 var color = d3.scaleLinear().domain([0, 100]).range(["lightblue","purple"]);
+                var pop = d3.scaleLog().domain([100000, 2000000000]).range([2, 30]).base(2);
+                var continent = d3.scaleLinear()
+                    .domain(["Africa", "North America", "Middle & South America", "Asia", "Europe", "Oceania"])
+                    .range(["brown", "green", "orange", "red", "purple", "blue"]);
                 
                 // Axes
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+50+")")
                     .call(d3.axisLeft(y)
-                    .tickValues([100,80,60,40,20])
+                    .tickValues([80,75,70,65,60,55,50])
                     .tickFormat(d3.format("~s")));
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+(600+50)+")")
@@ -48,10 +52,11 @@
                 d3.select("svg").append("text")
                     .attr("class", "y label")
                     .attr("text-anchor", "end")
+                    .attr("x", -250)
                     .attr("y", 6)
                     .attr("dy", ".75em")
                     .attr("transform", "rotate(-90)")
-                    .text("Life Expectancy (years)");
+                    .text("Life Expectancy (year)");
 
                 // Plot
                 d3.select('svg')
@@ -62,9 +67,9 @@
                     .selectAll('circle').data(data).enter()
                         .append("circle")
                         .attr("cx", function(d) { return x(d.GDP); } )
-                        .attr("cy", function(d) { return y(d.Life_expectancy); } )
-                        .attr("r", function(d) { return 2 + Number.parseInt(d.Alcohol); } )
-                        .style("fill", function(d) { return color(d.BMI); } );
+                        .attr("cy", function(d) { return y(d.LifeExpectancy); } )
+                        .attr("r", function(d) { return pop(d.Population); } )
+                        .style("fill", function(d) { return continent(d.Continent); } );
             }
         </script>
     </body>
