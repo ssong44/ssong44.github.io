@@ -11,7 +11,7 @@
             async function init() {
                 const data = await d3.csv(
                     'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Life%20Expectancy%20Data.csv');
-                
+                console.log(data);
                 var x = d3.scaleLinear().domain([0, 100000]).range([0, 200]);
                 var y = d3.scaleLinear().domain([0, 100]).range([200, 0]);
                 
@@ -19,13 +19,13 @@
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+50+")")
                     .call(d3.axisLeft(y)
-                    .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90 ,100]))
-                    .tickFormat(d3.format("~s"));
+                    .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90 ,100])
+                    .tickFormat(d3.format("~s")));
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+(200+50)+")")
                     .call(d3.axisBottom(x)
-                    .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90 ,100]))
-                    .tickFormat(d3.format("~s"));
+                    .tickValues([10, 20, 30, 40, 50, 60, 70, 80, 90 ,100])
+                    .tickFormat(d3.format("~s")));
 
                 // Plot
                 d3.select('svg')
