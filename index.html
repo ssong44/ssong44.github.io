@@ -18,7 +18,8 @@
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+50+")")
                     .call(d3.axisLeft(y)
-                    .tickValues([20,40,60,80,100]));
+                    .tickValues([20,40,60,80,100])
+                    .tickFormat(d3.format("~s")));
                 d3.select("svg").append("g")
                     .attr("transform", "translate("+50+", "+(200+50)+")")
                     .call(d3.axisBottom(x)
@@ -34,7 +35,7 @@
                     .selectAll('circle').data(data).enter()
                         .append("circle")
                         .attr("cx", function(d) { return x(d.GDP); } )
-                        .attr("cy", function(d) { return y(d.Expectancy); } )
+                        .attr("cy", function(d) { return y(d.Life_expectancy); } )
                         .attr("r", function(d) { return 2 + Number.parseInt(d.Alcohol); } );
             }
         </script>
