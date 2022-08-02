@@ -1,4 +1,4 @@
-Entity,Code,LifeExpectancy,GDP,Population,Continent
+Country,Code,LifeExpectancy,GDP,Population,Continent
 Afghanistan,AFG,64.486,1934.555054,37171922,Asia
 Albania,ALB,78.458,11104.16602,2882735,Europe
 Algeria,DZA,76.693,14228.02539,42228415,Africa
