@@ -13,10 +13,11 @@
                 var width = 700;
                 var height = 700;
                 var margin = 50;
+
                 var svg = d3.select("#scatterplot")
                     .append("svg")
-                        .attr("width", width)
-                        .attr("height", height);
+                        .attr("width", width + 2*margin)
+                        .attr("height", height + 2*margin);
 
 
                 async function init() {
@@ -93,11 +94,9 @@
 
                     // Plot
                     svg
-                        .attr("width", width + 2*margin)
-                        .attr("height", height + 2*margin)
                         .append("g")
                             .attr("transform", "translate("+margin+", "+margin+")")
-                        .selectAll('circle').data(data).enter()
+                        .selectAll("circle").data(data).enter()
                             .append("circle")
                             .attr("cx", function(d) { return x(d.GDP); } )
                             .attr("cy", function(d) { return y(d.LifeExpectancy); } )
