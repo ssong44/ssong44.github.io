@@ -133,7 +133,6 @@
                         .style("alignment-baseline", "middle") 
                     // Interactive legend
                     .on("mouseover", function(d) {
-                        console.log(d);
                         svg.selectAll("circle")
                             .filter(function(l) { return l.Continent != d; })
                             .style("opacity", 0)
