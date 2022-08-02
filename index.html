@@ -1,8 +1,8 @@
     <!DOCTYPE html>
     <html>
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-        // Tooltip
         <style>
             #tooltip {
                 opacity: 0;
@@ -15,8 +15,8 @@
         </style>
 
         <body onload="init()">
-            <h1>Hello World</h1>
-            <P> I'm hosted with GitHub Pages.</P>
+            <h1>The sad truth: the poorer you are, the faster you die. </h1>
+            <P> Here is a graph plotting life expectancy against GDP per capita.</P>
 
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
@@ -37,10 +37,9 @@
                         'https://raw.githubusercontent.com/ssong44/ssong44.github.io/main/Data/data_filtered.csv');
                     var x = d3.scaleLog().domain([500, 160000]).range([0, width]).base(10);
                     var y = d3.scaleLinear().domain([50, 85]).range([height, 0]);
-                    var color = d3.scaleLinear().domain([0, 100]).range(["lightblue","purple"]);
                     var pop = d3.scaleLog().domain([20000000, 2000000000]).range([5, 30]).base(10);
-                    var continent = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
-                    
+                    var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"]
+                    var color = d3.scaleOrdinal().domain(continents).range(d3.schemeSet2);
                     var tooltip = d3.select("#tooltip");
 
                     // Axes
@@ -81,7 +80,7 @@
                             .attr("cx", function(d) { return x(d.GDP); } )
                             .attr("cy", function(d) { return y(d.LifeExpectancy); } )
                             .attr("r", function(d) { return pop(d.Population); } )
-                            .style("fill", function(d) { return continent(d.Continent); } )
+                            .style("fill", function(d) { return color(d.Continent); } )
                             .style("stroke", "black")
                         .on("mouseover", function(d, i) {
                             tooltip
@@ -96,6 +95,30 @@
                         .on("mouseout", function() {
                             tooltip.style("opacity", 0);
                         });
+                    
+                    // Legend
+                    // code source: https://d3-graph-gallery.com/graph/custom_legend.html
+                    svg.append("g")
+                        .selectAll("legendDots")
+                    .data(continents)
+                    .enter()
+                    .append("circle")
+                        .attr("cx", 100)
+                        .attr("cy", function(d,i) { return 100 + i*25; })
+                        .attr("r", 7)
+                        .style("fill", function(d) { return color(d); });
+                    
+                    svg.append("g")
+                        .selectAll("legendLabels")
+                    .data(continents)
+                    .enter()
+                    .append("text")
+                        .attr("x", 120)
+                        .attr("y", function(d,i) { return 100 + i*25; })
+                        .style("fill", "black")
+                        .text(function(d) { return d; } )
+                        .attr("text-anchor", "left")
+                        .style("alignment-baseline", "middle");       
                 }
             </script>
         </body>
