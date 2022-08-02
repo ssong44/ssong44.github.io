@@ -1,7 +1,8 @@
     <!DOCTYPE html>
     <html>
         <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
 
         <style>
             #tooltip {
@@ -18,9 +19,10 @@
             <h1>The Sad Truth: The Poorer You Are, The Faster You Die. </h1>
             <P> Here is a graph plotting life expectancy against GDP per capita, using a dataset from 2018. Do you notice any trend?</P>
 
-            <div><input type="checkbox" class="checkbox" value="Trend" unchecked><label>Trend</label></div>
+            <div><input type="checkbox" class="checkbox" value="Trend" unchecked><label>Click me</label></div>
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
+            
             <script>
                 var width = 700;
                 var height = 700;
@@ -38,19 +40,20 @@
                     var x = d3.scaleLog().domain([500, 160000]).range([0, width]).base(10);
                     var y = d3.scaleLinear().domain([50, 85]).range([height, 0]);
                     var pop = d3.scaleLog().domain([20000000, 2000000000]).range([5, 30]).base(10);
-                    var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"]
+                    var popLegend = [0, 10000000, 50000000, 100000000, 500000000, 1000000000];
+                    const popMap = new Map();
+                    popMap.set(0, 10000000);
+                    popMap.set(10000000, 50000000);
+                    popMap.set(50000000, 100000000);
+                    popMap.set(100000000, 500000000);
+                    popMap.set(500000000, 1000000000);
+                    popMap.set(1000000000, 2000000000);
+
+                    var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"];
                     var color = d3.scaleOrdinal().domain(continents).range(d3.schemeSet2);
                     var tooltip = d3.select("#tooltip");
-                    var currentFilter = "none";
-
-                    var dataReady = continents.map(function(continent) {
-                        return {
-                            name: continent,
-                            values: data.map(function(d) {
-                                return {country: d.country, value: +d[continent]};
-                            })
-                        };
-                    });
+                    var continentFilter = "none";
+                    var populationFilter = -1;
 
                     // Axes
                     svg.append("g")
@@ -106,7 +109,7 @@
                             tooltip.style("opacity", 0);
                         });
                     
-                    // Legend
+                    // Continent Legend
                     // code source: https://d3-graph-gallery.com/graph/custom_legend.html
                     svg.append("g")
                         .selectAll("legendDots")
@@ -132,17 +135,56 @@
                         .style("alignment-baseline", "middle") 
                     // Interactive legend
                     .on("click", function(d) {
-                        if (d == currentFilter) {
+                        if (d == continentFilter) {
                             svg.selectAll("circle")
                                 .style("opacity", 1);
-                            currentFilter = "none";
+                            continentFilter = "none";
                         } else {
                             svg.selectAll("circle")
                                 .style("opacity", 1);
                             svg.selectAll("circle")
                                 .filter(function(l) { return l.Continent != d; })
                                 .style("opacity", 0);
-                            currentFilter = d;
+                            continentFilter = d;
+                        }
+                    });    
+
+                    // Population Legend
+                    // code source: https://d3-graph-gallery.com/graph/custom_legend.html
+                    svg.append("g")
+                        .selectAll("PopulationDots")
+                    .data(popLegend)
+                    .append("rect")
+                        .attr("x", 600)
+                        .attr("y", function(d,i) { return 600 + i*25; })
+                        .attr("width", 7)
+                        .attr("height", 7)
+                        .style("fill", "black" );
+                    
+                    svg.append("g")
+                        .selectAll("legendLabels")
+                    .data(popLegend)
+                    .enter()
+                    .append("text")
+                        .attr("x", 620)
+                        .attr("y", function(d,i) { return 600 + i*25; })
+                        .style("fill", "black")
+                        .text(function(d) { return d + " ~ " + popMap.get(d); } )
+                        .attr("text-anchor", "left")
+                        .style("alignment-baseline", "middle") 
+                    // Interactive legend
+                    .on("click", function(d) {
+                        if (d == populationFilter) {
+                            svg.selectAll("circle")
+                                .style("opacity", 1);
+                            populationFilter = -1;
+                        } else {
+                            svg.selectAll("circle")
+                                .style("opacity", 1);
+                            svg.selectAll("circle")
+                                .filter(function(l) { return l.Population < d || l.population > popMap.get(d); })
+                                .style("opacity", 0);
+                            populationFilter = d;
                         }
                     });    
 
@@ -154,20 +196,10 @@
                             .attr('x1', 50)
                             .attr('y1', 650)
                             .attr('x2', 650)
-                            .attr('y2', 50)
-                        .on("mouseover", function(d, i) {
-                            tooltip
-                                .style("opacity", 1)
-                                .style("left",(d3.event.pageX + 90)+"px")
-                                .style("top", (d3.event.pageY)+"px")
-                                .html(d.Country 
-                                + "<br>Life Expectancy: " + d3.format(",.1f")(d.LifeExpectancy)
-                                + "<br>GDP: " + d3.format("$,.0f")(d.GDP) 
-                                + "<br>Population: " + d3.format(",")(d.Population));
-                        })
-                        .on("mouseout", function() {
-                            tooltip.style("opacity", 0);
-                        });
+                            .attr('y2', 50);
+                    
+                    // Anotations
+
 
                     // Checkbox
                     // source: https://d3-graph-gallery.com/graph/bubblemap_buttonControl.html
