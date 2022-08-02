@@ -18,11 +18,9 @@
             <h1>The Sad Truth: The Poorer You Are, The Faster You Die. </h1>
             <P> Here is a graph plotting life expectancy against GDP per capita, using a dataset from 2018. Do you notice any trend?</P>
 
+            <div><input type="checkbox" class="checkbox" value="Trend" unchecked><label>Trend</label></div>
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
-            <div>
-            <input type="checkbox" class="checkbox" value="Trend" unchecked><label>Trend</label>
-            </div>
             <script>
                 var width = 700;
                 var height = 700;
@@ -43,6 +41,7 @@
                     var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"]
                     var color = d3.scaleOrdinal().domain(continents).range(d3.schemeSet2);
                     var tooltip = d3.select("#tooltip");
+                    var currentFilter = "none";
 
                     var dataReady = continents.map(function(continent) {
                         return {
@@ -132,14 +131,19 @@
                         .attr("text-anchor", "left")
                         .style("alignment-baseline", "middle") 
                     // Interactive legend
-                    .on("mouseover", function(d) {
-                        svg.selectAll("circle")
-                            .filter(function(l) { return l.Continent != d; })
-                            .style("opacity", 0)
-                    .on("mouseout", function() {
-                        svg.selectAll("circle")
-                            .style("opacity", 1);
-                    })
+                    .on("click", function(d) {
+                        if (d == currentFilter) {
+                            svg.selectAll("circle")
+                                .style("opacity", 1);
+                            currentFilter = "none";
+                        } else {
+                            svg.selectAll("circle")
+                                .style("opacity", 1);
+                            svg.selectAll("circle")
+                                .filter(function(l) { return l.Continent != d; })
+                                .style("opacity", 0);
+                            currentFilter = d;
+                        }
                     });    
 
                     // Liniar trend
