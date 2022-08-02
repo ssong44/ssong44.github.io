@@ -135,7 +135,7 @@
                     .on("mouseover", function(d) {
                         console.log(d);
                         svg.selectAll("circle")
-                            .filter(function(l) { return l.Continent == d; })
+                            .filter(function(l) { return l.Continent != d; })
                             .style("opacity", 0)
                     .on("mouseout", function() {
                         svg.selectAll("circle")
