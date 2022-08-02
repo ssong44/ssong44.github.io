@@ -20,6 +20,9 @@
 
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
+            <div>
+            <input type="checkbox" class="checkbox" value="Trend" unchecked><label>Trend</label>
+            </div>
             <script>
                 var width = 700;
                 var height = 700;
@@ -82,7 +85,7 @@
                     svg
                         .append("g")
                             .attr("transform", "translate("+margin+", "+margin+")")
-                        .selectAll("circle").data(data).enter()
+                        .selectAll("plots").data(data).enter()
                             .append("circle")
                             .style("opacity", 1)
                             .attr("cx", function(d) { return x(d.GDP); } )
@@ -110,10 +113,11 @@
                         .selectAll("legendDots")
                     .data(continents)
                     .enter()
-                    .append("circle")
-                        .attr("cx", 100)
-                        .attr("cy", function(d,i) { return 100 + i*25; })
-                        .attr("r", 7)
+                    .append("rect")
+                        .attr("x", 100)
+                        .attr("y", function(d,i) { return 100 + i*25; })
+                        .attr("width", 7)
+                        .attr("height", 7)
                         .style("fill", function(d) { return color(d); });
                     
                     svg.append("g")
@@ -127,9 +131,11 @@
                         .text(function(d) { return d; } )
                         .attr("text-anchor", "left")
                         .style("alignment-baseline", "middle") 
-                    .on("mouseover", function() {
+                    // Interactive legend
+                    .on("mouseover", function(d) {
+                        console.log(d);
                         svg.selectAll("circle")
-                            .filter(function(d) { return d.Continent != d; })
+                            .filter(function(l) { return l.Continent == d; })
                             .style("opacity", 0)
                     .on("mouseout", function() {
                         svg.selectAll("circle")
@@ -138,27 +144,53 @@
                     });    
 
                     // Liniar trend
-                    // svg.append("line")
-                    //         .style("opacity", 0)
-                    //         .style("stroke", "red")
-                    //         .style("stroke-width", 3)
-                    //         .attr('x1', 50)
-                    //         .attr('y1', 650)
-                    //         .attr('x2', 650)
-                    //         .attr('y2', 50)
-                    //     .on("mouseover", function(d, i) {
-                    //         tooltip
-                    //             .style("opacity", 1)
-                    //             .style("left",(d3.event.pageX + 90)+"px")
-                    //             .style("top", (d3.event.pageY)+"px")
-                    //             .html(d.Country 
-                    //             + "<br>Life Expectancy: " + d3.format(",.1f")(d.LifeExpectancy)
-                    //             + "<br>GDP: " + d3.format("$,.0f")(d.GDP) 
-                    //             + "<br>Population: " + d3.format(",")(d.Population));
-                    //     })
-                    //     .on("mouseout", function() {
-                    //         tooltip.style("opacity", 0);
-                    //     });
+                    svg.append("line")
+                            .style("opacity", 0)
+                            .style("stroke", "red")
+                            .style("stroke-width", 3)
+                            .attr('x1', 50)
+                            .attr('y1', 650)
+                            .attr('x2', 650)
+                            .attr('y2', 50)
+                        .on("mouseover", function(d, i) {
+                            tooltip
+                                .style("opacity", 1)
+                                .style("left",(d3.event.pageX + 90)+"px")
+                                .style("top", (d3.event.pageY)+"px")
+                                .html(d.Country 
+                                + "<br>Life Expectancy: " + d3.format(",.1f")(d.LifeExpectancy)
+                                + "<br>GDP: " + d3.format("$,.0f")(d.GDP) 
+                                + "<br>Population: " + d3.format(",")(d.Population));
+                        })
+                        .on("mouseout", function() {
+                            tooltip.style("opacity", 0);
+                        });
+
+                    // Checkbox
+                    // source: https://d3-graph-gallery.com/graph/bubblemap_buttonControl.html
+                    function update(){
+
+                        // For each check box:
+                        d3.selectAll(".checkbox").each(function(d){
+                            cb = d3.select(this);
+                            grp = cb.property("value");
+
+                            // If the box is check, I show the group
+                            if(cb.property("checked")){
+                                svg.selectAll("line").transition().duration(1000).style("opacity", 1);
+
+                            // Otherwise I hide it
+                            }else{
+                                svg.selectAll("line").transition().duration(1000).style("opacity", 0);
+                            }
+                        })
+                    }
+
+                    // When a button change, I run the update function
+                    d3.selectAll(".checkbox").on("change",update);
+
+                    // And I initialize it at the beginning
+                    update();
                 }
             </script>
         </body>
