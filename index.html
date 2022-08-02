@@ -2,12 +2,24 @@
     <html>
         <script src="https://d3js.org/d3.v5.min.js"></script>
 
+        // Tooltip
+        <style>
+            #tooltip {
+                opacity: 0;
+                position: absolute;
+                text-align: center;
+                width: 215px; height: 75px;
+                background: white;
+                border: 1px solid;
+            }
+        </style>
 
         <body onload="init()">
             <h1>Hello World</h1>
             <P> I'm hosted with GitHub Pages.</P>
 
             <div id ="scatterplot"></div>
+            <div id="tooltip"></div>
             
             <script>
                 var width = 700;
@@ -29,41 +41,8 @@
                     var pop = d3.scaleLog().domain([20000000, 2000000000]).range([5, 30]).base(10);
                     var continent = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
                     
-                    // Tooltip
+                    var tooltip = d3.select("#tooltip");
 
-                    // "Scatterplot with tooltip in d3.js"
-                    // source: https://d3-graph-gallery.com/graph/scatter_tooltip.html
-                    var tooltip = d3.select("#scatterplot")
-                        .append("div")
-                        .style("opacity", 0)
-                        .attr("class", "tooltip")
-                        .style("background-color", "white")
-                        .style("border", "solid")
-                        .style("border-width", "1px")
-                        .style("border-radius", "5px")
-                        .style("padding", "10px");
-                    
-                    var mouseover = function(d) {
-                        tooltip
-                            .style("opacity", 1);
-                    }
-                    var mousemove = function(d) {
-                        tooltip
-                            .html(d.Country 
-                                + "<br>Life Expectancy: " + d.LifeExpectancy
-                                + "<br>GDP: " + d.GDP 
-                                + "<br>Population: " + d.Population)
-                            .style("left", (d3.mouse(this)[0] + 90) + "px")
-                            .style("top", d3.mouse(this)[1] + "px");
-                    }
-                    var mouseleave = function(d) {
-                        tooltip
-                            .transition()
-                            .duration(200)
-                            .style("opacity", 0);
-                    }
-                    
-                    
                     // Axes
                     svg.append("g")
                         .attr("transform", "translate("+margin+", "+margin+")")
@@ -92,6 +71,7 @@
                         .attr("transform", "rotate(-90)")
                         .text("Life Expectancy (year)");
 
+
                     // Plot
                     svg
                         .append("g")
@@ -103,9 +83,19 @@
                             .attr("r", function(d) { return pop(d.Population); } )
                             .style("fill", function(d) { return continent(d.Continent); } )
                             .style("stroke", "black")
-                        .on("mouseover", mouseover)
-                        .on("mousemove", mousemove)
-                        .on("mouseleave", mouseleave);
+                        .on("mouseover", function(d, i) {
+                            tooltip
+                                .style("opacity", 1)
+                                .style("left",(d3.event.pageX + 90)+"px")
+                                .style("top", (d3.event.pageY)+"px")
+                                .html(d.Country 
+                                + "<br>Life Expectancy: " + d3.format(",.1f")(d.LifeExpectancy)
+                                + "<br>GDP: " + d3.format("$,.0f")(d.GDP) 
+                                + "<br>Population: " + d3.format(",")(d.Population));
+                        })
+                        .on("mouseout", function() {
+                            tooltip.style("opacity", 0);
+                        });
                 }
             </script>
         </body>
