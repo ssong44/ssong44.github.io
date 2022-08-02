@@ -29,14 +29,6 @@
                 <br> Click on the legends on the top left to reveal more information. </P>
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
-            <div id="annotation"></div>
-            <div id="trend"></div>
-            <div id="Africa"></div>
-            <div id="Asia"></div>
-            <div id="Europe"></div>
-            <div id="North_America"></div>
-            <div id="South_America"></div>
-            <div id="Oceania"></div>
             
             <script>
                 var width = 700;
@@ -59,13 +51,6 @@
                     var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"];
                     var color = d3.scaleOrdinal().domain(continents).range(d3.schemeSet2);
                     var tooltip = d3.select("#tooltip");
-                    var annotation = d3.select("#annotation");
-                    var Africa = d3.select("#Africa");
-                    var Asia = d3.select("#Asia");
-                    var Europe = d3.select("#Europe");
-                    var North_America = d3.select("#North_America");
-                    var South_America = d3.select("#South_America");
-                    var Oceania = d3.select("#Oceania");
                     var continentFilter = "none";
 
                     // Axes
@@ -152,11 +137,6 @@
                             svg.selectAll("circle")
                                 .style("opacity", 1);
                             continentFilter = "none";
-                            svg.selectAll("#annotation")
-                                .style("opacity", 1)
-                                .attr("x",600)
-                                .attr("y", 600)
-                                .html(annotationMap.get("trend"));
                         } else {
                             svg.selectAll("circle")
                                 .style("opacity", 1);
@@ -164,11 +144,6 @@
                                 .filter(function(l) { return l.Continent != d; })
                                 .style("opacity", 0.2);
                             continentFilter = d;
-                            annotation
-                                .style("opacity", 1)
-                                .attr("x",600)
-                                .attr("y", 600)
-                                .html(annotationMap.get(d));
                         }
                     });    
 
@@ -183,16 +158,6 @@
                             .attr('y2', 50);
                     
                     // Anotations
-                    var annotationMap = new Map();
-                    annotationMap.set("Africa", "African countries are clustered towards the bottom-left of the chart. They are the least wealthiest, and also the shortest living people.");
-                    annotationMap.set("Asia", "Asian countries spread out towards the entire graph with a slight bias towards the upper right. They have a wide range both in terms of GDP and life expectancy.");
-                    annotationMap.set("Europe", "Countries in Europe, North America, and Oceania are clustuered towards the top-right of the chart. They are the wealthiest, and also the longest living people.");
-                    annotationMap.set("North_America", "Countries in Europe, North America, and Oceania are clustuered towards the top-right of the chart. They are the wealthiest, and also the longest living people.");
-                    annotationMap.set("Oceania", "Countries in Europe, North America, and Oceania are clustuered towards the top-right of the chart. They are the wealthiest, and also the longest living people.");
-                    annotationMap.set("South_America", "Countries in the Middle and South America are placed near the center of the plot.");
-                    annotationMap.set("trend", "There is a clear correlation between wealth and life expectancy.");
-
-
                     const type = d3.annotationCalloutCircle
 
                     const annotations = [
