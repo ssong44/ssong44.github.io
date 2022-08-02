@@ -16,11 +16,10 @@
 
         <body onload="init()">
             <h1>The Sad Truth: The Poorer You Are, The Faster You Die. </h1>
-            <P> Here is a graph plotting life expectancy against GDP per capita, using a dataset from 2018. What do you notice?</P>
+            <P> Here is a graph plotting life expectancy against GDP per capita, using a dataset from 2018. Do you notice any trend?</P>
 
             <div id ="scatterplot"></div>
             <div id="tooltip"></div>
-            
             <script>
                 var width = 700;
                 var height = 700;
@@ -41,6 +40,15 @@
                     var continents = ["Africa", "Asia", "Europe", "North America", "Middle & South America", "Oceania"]
                     var color = d3.scaleOrdinal().domain(continents).range(d3.schemeSet2);
                     var tooltip = d3.select("#tooltip");
+
+                    var dataReady = continents.map(function(continent) {
+                        return {
+                            name: continent,
+                            values: data.map(function(d) {
+                                return {country: d.country, value: +d[continent]};
+                            })
+                        };
+                    });
 
                     // Axes
                     svg.append("g")
@@ -76,6 +84,7 @@
                             .attr("transform", "translate("+margin+", "+margin+")")
                         .selectAll("circle").data(data).enter()
                             .append("circle")
+                            .style("opacity", 1)
                             .attr("cx", function(d) { return x(d.GDP); } )
                             .attr("cy", function(d) { return y(d.LifeExpectancy); } )
                             .attr("r", function(d) { return pop(d.Population); } )
@@ -117,17 +126,39 @@
                         .style("fill", "black")
                         .text(function(d) { return d; } )
                         .attr("text-anchor", "left")
-                        .style("alignment-baseline", "middle");       
-                    
+                        .style("alignment-baseline", "middle") 
+                    .on("mouseover", function() {
+                        svg.selectAll("circle")
+                            .filter(function(d) { return d.Continent != d; })
+                            .style("opacity", 0)
+                    .on("mouseout", function() {
+                        svg.selectAll("circle")
+                            .style("opacity", 1);
+                    })
+                    });    
+
                     // Liniar trend
-                    svg.append("line")
-                            .style("stroke", "red")
-                            .style("stroke-width", 3)
-                            .attr('x1', 50)
-                            .attr('y1', 650)
-                            .attr('x2', 650)
-                            .attr('y2', 50);
-                            
+                    // svg.append("line")
+                    //         .style("opacity", 0)
+                    //         .style("stroke", "red")
+                    //         .style("stroke-width", 3)
+                    //         .attr('x1', 50)
+                    //         .attr('y1', 650)
+                    //         .attr('x2', 650)
+                    //         .attr('y2', 50)
+                    //     .on("mouseover", function(d, i) {
+                    //         tooltip
+                    //             .style("opacity", 1)
+                    //             .style("left",(d3.event.pageX + 90)+"px")
+                    //             .style("top", (d3.event.pageY)+"px")
+                    //             .html(d.Country 
+                    //             + "<br>Life Expectancy: " + d3.format(",.1f")(d.LifeExpectancy)
+                    //             + "<br>GDP: " + d3.format("$,.0f")(d.GDP) 
+                    //             + "<br>Population: " + d3.format(",")(d.Population));
+                    //     })
+                    //     .on("mouseout", function() {
+                    //         tooltip.style("opacity", 0);
+                    //     });
                 }
             </script>
         </body>
