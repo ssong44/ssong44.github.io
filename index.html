@@ -37,7 +37,9 @@
                         .attr("class", "tooltip")
                         .style("background-color", "white")
                         .style("border", "solid")
-                        .style("border-width", "1px");
+                        .style("border-width", "1px")
+                        .style("border-radius", "5px")
+                        .style("padding", "10px");
                     
                     var mouseover = function(d) {
                         tooltip
@@ -100,6 +102,7 @@
                             .attr("cy", function(d) { return y(d.LifeExpectancy); } )
                             .attr("r", function(d) { return pop(d.Population); } )
                             .style("fill", function(d) { return continent(d.Continent); } )
+                            .style("stroke", "black")
                         .on("mouseover", mouseover)
                         .on("mousemove", mousemove)
                         .on("mouseleave", mouseleave);
